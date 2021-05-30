@@ -61,25 +61,8 @@ const generateRandomId = () => {
   return Math.floor(Math.random() * 1000000)
 }
 
-app.post('/api/persons', (request, response) => {
-  const body = request.body
-
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: 'Person name or number is missing'
-    })
-  }
-
-  PhonebookEntry.find({}).then(persons => {
-    const matchedPersons = persons.filter(p => p.name.includes(body.name))
-
-    console.log(matchedPersons)
-
-    if (matchedPersons.length > 0) {
-        return response.status(400).json({
-          error: 'Person name must be unique'
-        })
-    }
+app.post('/api/persons', (request, response, next) => {
+    const body = request.body
 
     const phonebookEntry = new PhonebookEntry({
       name: body.name,
@@ -91,7 +74,6 @@ app.post('/api/persons', (request, response) => {
             response.json(savedEntry.toJSON())
         })
         .catch(error => next(error))
-  })
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -110,7 +92,8 @@ app.put('/api/persons/:id', (request, response, next) => {
       number: body.number
     }
 
-  PhonebookEntry.findByIdAndUpdate(request.params.id, phonebookEntry, { new: true })
+  PhonebookEntry.findByIdAndUpdate(request.params.id, phonebookEntry,
+                                   { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       console.log(updatedPerson)
       response.json(updatedPerson)
