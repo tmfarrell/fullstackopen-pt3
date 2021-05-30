@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"No tests yet\" && exit 0"
+    "test": "echo \"No tests yet\" && exit 0",
+    "lint": "eslint . --fix"
   },
   "author": "Tim Farrell",
   "license": "MIT",
@@ -20,6 +21,9 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.27.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.24.0",
     "nodemon": "^2.0.7"
   }
 }
